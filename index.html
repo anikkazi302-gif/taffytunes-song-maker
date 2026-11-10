@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TaffyTunes Song Maker — Original Nursery Rhyme Songs for Kids' Shorts</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Trebuchet MS", "Segoe UI", Verdana, sans-serif;
+    background: linear-gradient(180deg, #FFF7CC 0%, #FFE98A 45%, #FFF3B0 100%);
+    color: #3A2E00; min-height: 100vh; padding: 20px 14px 60px;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 22px; }
+  header .logo { font-size: 56px; }
+  h1 { font-size: 34px; color: #D97706; letter-spacing: .5px; }
+  header p { font-size: 16px; color: #6B5300; margin-top: 6px; line-height: 1.5; }
+  .card {
+    background: #FFFFFF; border: 3px solid #FFC93C; border-radius: 22px;
+    padding: 20px; margin-bottom: 18px; box-shadow: 0 6px 18px rgba(217,119,6,.18);
+  }
+  h2 { font-size: 20px; color: #B45309; margin-bottom: 12px; }
+  h2 .step { background:#FFC93C; border-radius: 50%; display:inline-block; width:28px; height:28px; line-height:28px; text-align:center; font-size:16px; margin-right:6px; }
+  .topics { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .topic-btn {
+    border: 2px solid #FFE08A; background: #FFF9DB; border-radius: 16px;
+    padding: 12px 8px; font-size: 15px; font-weight: bold; color: #6B5300;
+    cursor: pointer; font-family: inherit; transition: transform .1s, background .15s, border-color .15s;
+  }
+  .topic-btn:hover { transform: translateY(-2px); background: #FFF3B0; }
+  .topic-btn.selected { background: #FFC93C; border-color: #D97706; color: #3A2E00; box-shadow: 0 4px 10px rgba(217,119,6,.35); }
+  .topic-btn .em { display:block; font-size: 30px; margin-bottom: 4px; }
+  .actions-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  .btn {
+    border: none; border-radius: 999px; padding: 13px 22px; font-size: 16px; font-weight: bold;
+    cursor: pointer; font-family: inherit;
+  }
+  .btn-primary { background: #F59E0B; color: #fff; box-shadow: 0 4px 0 #B45309; }
+  .btn-primary:active { transform: translateY(2px); box-shadow: 0 2px 0 #B45309; }
+  .btn-primary:disabled { background: #D6C48A; box-shadow: 0 4px 0 #A98F4E; cursor: not-allowed; }
+  .btn-ghost { background: #fff; color: #B45309; border: 2px solid #F59E0B; }
+  .mood { margin-top: 12px; font-size: 15px; background: #FEF3C7; border-radius: 12px; padding: 10px 12px; line-height: 1.5; }
+  .hook-box {
+    text-align: center; background: linear-gradient(135deg, #FDE68A, #FCD34D);
+    border-radius: 16px; padding: 18px 12px; margin-bottom: 16px;
+  }
+  .hook-box .label { font-size: 13px; font-weight: bold; letter-spacing: 2px; color: #92400E; }
+  .hook-box .hook { font-size: 26px; font-weight: bold; color: #78350F; margin-top: 6px; line-height: 1.3; }
+  .lyrics { white-space: pre-wrap; font-size: 16px; line-height: 1.65; background: #FFFBEB; border-radius: 14px; padding: 16px; }
+  .out-block { margin-bottom: 16px; }
+  .out-block h3 { font-size: 16px; color: #92400E; margin-bottom: 6px; }
+  .out-text { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px; font-size: 15px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+  .copy-btn {
+    margin-top: 8px; border: 2px solid #F59E0B; background: #fff; color: #B45309;
+    border-radius: 999px; padding: 8px 16px; font-size: 14px; font-weight: bold; cursor: pointer; font-family: inherit;
+  }
+  .copy-btn:hover { background: #FEF3C7; }
+  .copy-btn.copied { background: #22C55E; border-color: #22C55E; color: #fff; }
+  .hint { font-size: 14px; color: #6B5300; line-height: 1.6; }
+  .empty { color: #92400E; font-size: 15px; text-align: center; padding: 18px 8px; line-height: 1.6; }
+  footer { text-align: center; font-size: 13px; color: #92400E; margin-top: 26px; line-height: 1.6; }
+  @media (max-width: 520px) { h1 { font-size: 26px; } .hook-box .hook { font-size: 21px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">🎵🐥</div>
+    <h1>TaffyTunes Song Maker</h1>
+    <p>Make an original English nursery-rhyme song for a 1-minute kids' Short (9:16 vertical) — with Taffy!<br>
+    Pick a topic, get full lyrics, a hook, an SEO title, a description and hashtags. All lyrics are original.</p>
+  </header>
+
+  <section class="card">
+    <h2><span class="step">1</span>Pick a topic</h2>
+    <div class="topics" id="topicGrid"></div>
+    <div class="actions-row">
+      <button class="btn btn-primary" id="generateBtn" disabled>✨ Generate my song</button>
+      <button class="btn btn-ghost" id="randomBtn">🎲 Surprise me</button>
+    </div>
+    <div class="mood" id="moodBox" hidden></div>
+  </section>
+
+  <section class="card" id="outputCard" hidden>
+    <h2><span class="step">2</span>Your song — <span id="outTopicName"></span></h2>
+
+    <div class="hook-box">
+      <div class="label">🎤 HOOK — THE FIRST SUNG LINE</div>
+      <div class="hook" id="hookText"></div>
+    </div>
+
+    <div class="out-block">
+      <h3>📜 Full lyrics (4 verses + repeating chorus)</h3>
+      <div class="lyrics" id="lyricsText"></div>
+      <button class="copy-btn" data-copy="lyrics">📋 Copy lyrics</button>
+    </div>
+
+    <div class="out-block">
+      <h3>🏷️ SEO title</h3>
+      <div class="out-text" id="titleText"></div>
+      <button class="copy-btn" data-copy="title">📋 Copy title</button>
+    </div>
+
+    <div class="out-block">
+      <h3>📝 Description</h3>
+      <div class="out-text" id="descText"></div>
+      <button class="copy-btn" data-copy="desc">📋 Copy description</button>
+    </div>
+
+    <div class="out-block">
+      <h3>#️⃣ Hashtags</h3>
+      <div class="out-text" id="tagsText"></div>
+      <button class="copy-btn" data-copy="tags">📋 Copy hashtags</button>
+    </div>
+
+    <div class="out-block">
+      <h3>🎵 Music fit</h3>
+      <div class="out-text" id="musicText"></div>
+    </div>
+  </section>
+
+  <section class="card" id="emptyCard">
+    <p class="empty">👆 Pick a topic above, then press <b>Generate my song</b>.<br>
+    You will get the hook, the full lyrics, the SEO title, the description, the hashtags and a music-fit hint — all ready to copy.</p>
+  </section>
+
+  <footer>
+    TaffyTunes Song Maker — open source (MIT). All lyrics generated here are original.<br>
+    Made for 1-minute kids' Shorts (9:16 vertical) with Taffy. Sing, dance, and learn! 🌈
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+/* ------------------------------------------------------------------ */
+/*  Topic data — every lyric below is original, written for this tool */
+/* ------------------------------------------------------------------ */
+const TOPICS = [
+  {
+    id: "bath", name: "Bath Time", emoji: "🛁", mood: "cheerful",
+    moment: "Splish Splash Time", question: "Can You Wash Your Toes with Taffy?",
+    hook: "Splish, splash, bubbles in the air!",
+    chorus: [
+      "Splish, splash, wash, wash, wash!",
+      "Bubbles, bubbles, everywhere!",
+      "Splish, splash, wash, wash, wash!",
+      "Bath time fun with Taffy, come and share!"
+    ],
+    verses: [
+      { action: "Splash the water", lines: [
+        "Rub-a-dub, rub-a-dub, in the tub,",
+        "Little yellow duck goes glub, glub, glub!",
+        "Wash your arms and wash your toes,",
+        "Splishy-splashy, here it goes!"
+      ]},
+      { action: "Scrub with soap", lines: [
+        "Bubbles on my nose, bubbles on my chin,",
+        "Scrub, scrub, scrub, and let the fun begin!",
+        "Wash your hands and wash your face,",
+        "Soap makes bubbles all over the place!"
+      ]},
+      { action: "Rinse off", lines: [
+        "Pour the water, rinse, rinse, rinse,",
+        "Wash the bubbles off, off, off!",
+        "Shake your head and wiggle your feet,",
+        "Bath time makes us clean and neat!"
+      ]},
+      { action: "Dry with a towel", lines: [
+        "Wrap up warm in a towel so soft,",
+        "Pat, pat, pat, and lift your arms up high!",
+        "Now we're clean from head to toe,",
+        "Bath time fun, it's time to go!"
+      ]}
+    ]
+  },
+  {
+    id: "teeth", name: "Brushing Teeth", emoji: "🪥", mood: "playful",
+    moment: "Brush, Brush, Brush!", question: "Can You Brush Your Teeth with Taffy?",
+    hook: "Brush, brush, brush your teeth!",
+    chorus: [
+      "Brush, brush, brush, up and down!",
+      "Round and round, don't make a frown!",
+      "Brush, brush, brush, left and right!",
+      "Sparkling teeth, morning and night!"
+    ],
+    verses: [
+      { action: "Squeeze the toothpaste", lines: [
+        "Squeeze, squeeze, a little dot,",
+        "Minty toothpaste, quite a lot!",
+        "On the brush, it sits just right,",
+        "Time to brush, morning and night!"
+      ]},
+      { action: "Brush up and down", lines: [
+        "Up, down, up, down, brush away!",
+        "Sugar bugs, be gone today!",
+        "Front teeth, back teeth, shiny white,",
+        "Brush them gently, left and right!"
+      ]},
+      { action: "Brush in circles", lines: [
+        "Round and round, go slow, go slow,",
+        "Round and round, watch them glow!",
+        "Spit it out, and rinse with cheer,",
+        "Clean, clean teeth are finally here!"
+      ]},
+      { action: "Smile big", lines: [
+        "Open wide and show your smile!",
+        "Sparkling teeth, all the while!",
+        "Brush twice a day, it's what we do,",
+        "Healthy teeth for me and you!"
+      ]}
+    ]
+  },
+  {
+    id: "bedtime", name: "Bedtime", emoji: "🌙", mood: "calm",
+    moment: "Sleepy Time!", question: "Can You Say Goodnight with Taffy?",
+    hook: "Twinkle, twinkle, time for bed!",
+    chorus: [
+      "Goodnight, moon, goodnight, stars,",
+      "Sleepy eyes, no more cars.",
+      "Goodnight, moon, goodnight, light,",
+      "Taffy says goodnight, sleep tight!"
+    ],
+    verses: [
+      { action: "Put on pajamas", lines: [
+        "Pajamas on, so soft and warm,",
+        "Snuggle up, safe from the storm.",
+        "Pull the blanket to your chin,",
+        "Dreamland fun is soon to begin!"
+      ]},
+      { action: "Brush teeth and wash face", lines: [
+        "Brush your teeth and wash your face,",
+        "Slowly, softly, at bedtime's pace.",
+        "Wash your hands and dry them right,",
+        "Then it's time to say goodnight!"
+      ]},
+      { action: "Read a story", lines: [
+        "Open a book, a story to hear,",
+        "Taffy whispers, soft and near.",
+        "Once upon a dream, so bright,",
+        "Close your eyes and hold on tight!"
+      ]},
+      { action: "Close your eyes", lines: [
+        "Close your eyes, one, two, three,",
+        "Dream of all the things you'll see!",
+        "Stars are winking, soft and low,",
+        "Off to dreamland, here we go!"
+      ]}
+    ]
+  },
+  {
+    id: "animals", name: "Animals", emoji: "🐾", mood: "playful",
+    moment: "Animal Parade!", question: "Can You Roar Like a Lion with Taffy?",
+    hook: "Roar like a lion, stomp, stomp, stomp!",
+    chorus: [
+      "What sound does the lion make?",
+      "Roar, roar, roar!",
+      "What sound does the cow make?",
+      "Moo, moo, moo!",
+      "Animals, animals, one and all,",
+      "Come and sing, big and small!"
+    ],
+    verses: [
+      { action: "Stomp like an elephant", lines: [
+        "Stomp, stomp, stomp, big and slow,",
+        "Elephant's trunk goes to and fro!",
+        "Big, big ears, flapping wide,",
+        "Stomp along with Taffy, side by side!"
+      ]},
+      { action: "Hop like a bunny", lines: [
+        "Hop, hop, hop, little bunny,",
+        "Ears go up, isn't it funny?",
+        "Wiggle your nose and thump your feet,",
+        "Bunny hopping is so sweet!"
+      ]},
+      { action: "Waddle like a duck", lines: [
+        "Waddle, waddle, quack, quack, quack,",
+        "Little yellow duck goes to the back!",
+        "Flap your wings and shake your tail,",
+        "Waddle along, without fail!"
+      ]},
+      { action: "Slither like a snake", lines: [
+        "Slither, slither, sss, sss, sss,",
+        "Snake slides by, oh, what a hiss!",
+        "Wiggle your body, side to side,",
+        "Animal friends, come for the ride!"
+      ]}
+    ]
+  },
+  {
+    id: "numbers", name: "Numbers", emoji: "🔢", mood: "cheerful",
+    moment: "Counting Fun!", question: "Can You Count to Five with Taffy?",
+    hook: "One, two, three, let's count with me!",
+    chorus: [
+      "One, two, three, four, five!",
+      "Counting makes us feel alive!",
+      "One, two, three, four, five!",
+      "Let's count again, one more time!"
+    ],
+    verses: [
+      { action: "Hold up one finger", lines: [
+        "One little star shining bright,",
+        "One little moon in the night!",
+        "One, one, one, point up high,",
+        "One little bird in the sky!"
+      ]},
+      { action: "Hold up two fingers", lines: [
+        "Two little ducks, quack, quack, quack,",
+        "Two little cats, sitting back!",
+        "Two, two, two, clap your hands,",
+        "Two little fish in the sands!"
+      ]},
+      { action: "Hold up three fingers", lines: [
+        "Three little birds singing sweet,",
+        "Three little bears with tiny feet!",
+        "Three, three, three, tap your toes,",
+        "Three little bees on a rose!"
+      ]},
+      { action: "Count to five", lines: [
+        "Four little frogs jump, jump, jump,",
+        "Five little monkeys thump, thump, thump!",
+        "Count them all, one to five,",
+        "Counting with Taffy, feeling alive!"
+      ]}
+    ]
+  },
+  {
+    id: "colors", name: "Colors", emoji: "🎨", mood: "cheerful",
+    moment: "Colors Everywhere!", question: "Can You Find Something Red with Taffy?",
+    hook: "Red, blue, yellow, green — colors all around!",
+    chorus: [
+      "Red like apples, blue like the sea,",
+      "Yellow like sunshine, come sing with me!",
+      "Green like grass and purple too,",
+      "Colors, colors, for me and you!"
+    ],
+    verses: [
+      { action: "Point to something red", lines: [
+        "Red, red, red, a fire truck!",
+        "Red, red, red, an apple, yum!",
+        "Point to something red today,",
+        "Red is here to stay and play!"
+      ]},
+      { action: "Point to something blue", lines: [
+        "Blue, blue, blue, the sky so wide,",
+        "Blue, blue, blue, the ocean tide!",
+        "Point to something blue and bright,",
+        "Blue is beautiful day and night!"
+      ]},
+      { action: "Point to something yellow", lines: [
+        "Yellow, yellow, a duckling's cheer,",
+        "Yellow, yellow, sunshine near!",
+        "Point to something yellow and gay,",
+        "Yellow brightens up our day!"
+      ]},
+      { action: "Point to something green", lines: [
+        "Green, green, green, the grass below,",
+        "Green, green, green, the trees that grow!",
+        "Point to something green and true,",
+        "Colors, colors, I love you!"
+      ]}
+    ]
+  },
+  {
+    id: "family", name: "Family", emoji: "👨‍👩‍👧", mood: "cheerful",
+    moment: "Family Love!", question: "Can You Hug Your Family with Taffy?",
+    hook: "Mommy, Daddy, love you so!",
+    chorus: [
+      "Mommy, Daddy, sister, brother,",
+      "Family love like no other!",
+      "Grandma, Grandpa, hugs so tight,",
+      "Family makes our hearts feel light!"
+    ],
+    verses: [
+      { action: "Hug Mommy", lines: [
+        "Hug, hug, hug, Mommy dear,",
+        "Mommy's love is always near!",
+        "Thank you, Mommy, for all you do,",
+        "Mommy, Mommy, I love you!"
+      ]},
+      { action: "Hug Daddy", lines: [
+        "Hug, hug, hug, Daddy strong,",
+        "Daddy's arms are where I belong!",
+        "Thank you, Daddy, for all you do,",
+        "Daddy, Daddy, I love you!"
+      ]},
+      { action: "Hold sister's and brother's hands", lines: [
+        "Hold my hand, sister dear,",
+        "Brother, brother, come near!",
+        "Play together, laugh and sing,",
+        "Family fun in everything!"
+      ]},
+      { action: "Family hug", lines: [
+        "Everyone together, hug so tight,",
+        "Family love feels just right!",
+        "Mommy, Daddy, all of you,",
+        "Family, family, I love you!"
+      ]}
+    ]
+  },
+  {
+    id: "food", name: "Food", emoji: "🍎", mood: "playful",
+    moment: "Yummy Food!", question: "Can You Taste the Apple with Taffy?",
+    hook: "Yum, yum, yum, what's for lunch?",
+    chorus: [
+      "Apples red and bananas yellow,",
+      "Carrots orange, hello, hello!",
+      "Yummy food, healthy too,",
+      "Eat your food, me and you!"
+    ],
+    verses: [
+      { action: "Bite an apple", lines: [
+        "Crunch, crunch, crunch, an apple red,",
+        "Bite it once, then bite again!",
+        "Crunchy apples, sweet and bright,",
+        "Eating apples is just right!"
+      ]},
+      { action: "Peel a banana", lines: [
+        "Peel, peel, peel, banana yellow,",
+        "Banana's such a happy fellow!",
+        "Peel it down and take a bite,",
+        "Bananas make us feel all right!"
+      ]},
+      { action: "Munch a carrot", lines: [
+        "Munch, munch, munch, carrot orange,",
+        "Crunchy carrots, what a change!",
+        "Munch it up, one, two, three,",
+        "Carrots help us see, see, see!"
+      ]},
+      { action: "Drink your milk", lines: [
+        "Drink your milk, white and cold,",
+        "Milk makes us strong and bold!",
+        "Sip, sip, sip, it tastes so good,",
+        "Healthy food, as we should!"
+      ]}
+    ]
+  },
+  {
+    id: "rain", name: "Rain", emoji: "☔", mood: "calm",
+    moment: "Rainy Day!", question: "Can You Splash in the Puddles with Taffy?",
+    hook: "Pitter-patter, rain is falling down!",
+    chorus: [
+      "Pitter-patter, rain, rain, rain,",
+      "Falling softly on the lane!",
+      "Pitter-patter, rain, rain, rain,",
+      "Splishy-splashy, fun again!"
+    ],
+    verses: [
+      { action: "Open your umbrella", lines: [
+        "Open up the umbrella wide,",
+        "Raindrops falling side by side!",
+        "Underneath, we stay so dry,",
+        "Watching rain fall from the sky!"
+      ]},
+      { action: "Splash in puddles", lines: [
+        "Splash, splash, splash, in the puddles,",
+        "Little boots go splishy-splashy!",
+        "Jump, jump, jump, one, two, three,",
+        "Puddle jumping, you and me!"
+      ]},
+      { action: "Listen to the rain", lines: [
+        "Listen, listen, pitter-pat,",
+        "Raindrops dancing, tippy-tap!",
+        "On the roof and on the tree,",
+        "Rainy music, happily!"
+      ]},
+      { action: "Watch the rainbow", lines: [
+        "After the rain, look in the sky,",
+        "Rainbow colors, oh so high!",
+        "Red and yellow, blue and green,",
+        "The prettiest sight you've ever seen!"
+      ]}
+    ]
+  },
+  {
+    id: "playground", name: "Playground", emoji: "🛝", mood: "dance",
+    moment: "Playground Day!", question: "Can You Slide Down with Taffy?",
+    hook: "Swing, slide, climb — let's play today!",
+    chorus: [
+      "Swing, swing, swing up high!",
+      "Slide, slide, slide, whee, whee!",
+      "Playground fun with Taffy and me,",
+      "Running, jumping, one, two, three!"
+    ],
+    verses: [
+      { action: "Swing on the swing", lines: [
+        "Swing, swing, swing, up and down,",
+        "Higher, higher, don't fall down!",
+        "Kick your legs and touch the sky,",
+        "Swinging makes us want to fly!"
+      ]},
+      { action: "Slide down the slide", lines: [
+        "Climb, climb, climb to the top,",
+        "Sit, sit, sit, then slide and stop!",
+        "Whee, whee, whee, down we go,",
+        "Sliding fast and sliding slow!"
+      ]},
+      { action: "Climb the ladder", lines: [
+        "Climb, climb, climb, step by step,",
+        "Hold on tight, don't take a step back!",
+        "Up, up, up, we reach the top,",
+        "Climbing high, we never stop!"
+      ]},
+      { action: "Run around", lines: [
+        "Run, run, run, round and round,",
+        "Jumping, hopping, off the ground!",
+        "Playground fun with friends so dear,",
+        "Run, run, run, and give a cheer!"
+      ]}
+    ]
+  },
+  {
+    id: "abc", name: "ABC", emoji: "🔤", mood: "cheerful",
+    moment: "ABC Time!", question: "Can You Sing the ABCs with Taffy?",
+    hook: "A, B, C, let's sing with me!",
+    chorus: [
+      "A, B, C, D, E, F, G,",
+      "Sing the alphabet with me!",
+      "H, I, J, K, L, M, N, O, P,",
+      "Letters, letters, one, two, three!"
+    ],
+    verses: [
+      { action: "Point to A", lines: [
+        "A is for apple, red and sweet,",
+        "A is for ant with tiny feet!",
+        "A, A, A, say it with me,",
+        "A is the first letter, whee!"
+      ]},
+      { action: "Point to B", lines: [
+        "B is for ball that bounces high,",
+        "B is for bird that flies in the sky!",
+        "B, B, B, bounce the ball,",
+        "B is for bird and big and small!"
+      ]},
+      { action: "Point to C", lines: [
+        "C is for cat, soft and sweet,",
+        "C is for cake, a yummy treat!",
+        "C, C, C, clap your hands,",
+        "C is for cat and cookie stands!"
+      ]},
+      { action: "Sing the whole alphabet", lines: [
+        "Sing the letters, A to Z,",
+        "Sing them all, just you and me!",
+        "A, B, C, we know them all,",
+        "Alphabet friends, big and small!"
+      ]}
+    ]
+  },
+  {
+    id: "manners", name: "Good Manners", emoji: "🌟", mood: "cheerful",
+    moment: "Please and Thank You!", question: "Can You Say Please with Taffy?",
+    hook: "Please and thank you, magic words!",
+    chorus: [
+      "Please and thank you, magic words,",
+      "Kind and sweet, like little birds!",
+      "Please and thank you, every day,",
+      "Magic words show the way!"
+    ],
+    verses: [
+      { action: "Say please", lines: [
+        "Please, please, please, the magic word,",
+        "Say it sweetly, let it be heard!",
+        "Please may I have a toy to share?",
+        "Please, please, please, show you care!"
+      ]},
+      { action: "Say thank you", lines: [
+        "Thank you, thank you, big and small,",
+        "Thank you, thank you, one and all!",
+        "Thank you for the food we eat,",
+        "Thank you makes the day complete!"
+      ]},
+      { action: "Share with friends", lines: [
+        "Share, share, share your toys,",
+        "Sharing brings the girls and boys!",
+        "Take a turn and pass it on,",
+        "Sharing makes us all belong!"
+      ]},
+      { action: "Say sorry and excuse me", lines: [
+        "Sorry, sorry, if I bump,",
+        "Excuse me, please, with a little jump!",
+        "Manners make the world so bright,",
+        "Kind words make everything right!"
+      ]}
+    ]
+  }
+];
+
+const MOODS = {
+  cheerful: { label: "Cheerful", hint: "Bright, bouncy track — fast, happy feel. Pick a cheerful, upbeat copyright-free song and mix it low under Taffy's voice." },
+  calm:     { label: "Calm",     hint: "Soft, gentle track — slow and soothing. Pick a soft, slow copyright-free song; keep the singing slow and sleepy." },
+  playful:  { label: "Playful",  hint: "Bouncy, giggly track — fun and light. Pick a playful copyright-free song with a light, bouncy beat." },
+  dance:    { label: "Dance",    hint: "Upbeat dance track — clap and move along. Pick a fast, danceable copyright-free song with a strong beat." }
+};
+
+const HASHTAG_BASE = "#TaffyTunes #NurseryRhymes #KidsSongs #Shorts #ToddlerLearning #PreschoolLearning #SingAlong #BabySongs #ChildrensSongs";
+
+let selectedTopic = null;
+let current = { lyrics: "", title: "", desc: "", tags: "" };
+
+/* ------------------------------------------------------------------ */
+/*  Topic picker                                                       */
+/* ------------------------------------------------------------------ */
+function renderTopics() {
+  const grid = document.getElementById("topicGrid");
+  grid.innerHTML = "";
+  TOPICS.forEach(function (t) {
+    const b = document.createElement("button");
+    b.className = "topic-btn";
+    b.type = "button";
+    b.dataset.topicId = t.id;
+    b.innerHTML = '<span class="em">' + t.emoji + "</span>" + t.name;
+    b.addEventListener("click", function () { selectTopic(t.id); });
+    grid.appendChild(b);
+  });
+}
+
+function selectTopic(id) {
+  selectedTopic = TOPICS.find(function (t) { return t.id === id; }) || null;
+  document.querySelectorAll(".topic-btn").forEach(function (b) {
+    b.classList.toggle("selected", b.dataset.topicId === id);
+  });
+  const gen = document.getElementById("generateBtn");
+  gen.disabled = !selectedTopic;
+  const moodBox = document.getElementById("moodBox");
+  if (selectedTopic) {
+    const m = MOODS[selectedTopic.mood];
+    moodBox.hidden = false;
+    moodBox.innerHTML = "<b>🎵 Music fit for " + selectedTopic.name + ":</b> " +
+      "<b>" + m.label + "</b> — " + m.hint;
+  } else {
+    moodBox.hidden = true;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Song generation                                                    */
+/* ------------------------------------------------------------------ */
+function topicTag(name) {
+  return "#" + name.replace(/[^A-Za-z0-9]+/g, "") + "Song";
+}
+
+function buildLyrics(t) {
+  const parts = [];
+  parts.push("HOOK (first sung line):");
+  parts.push(t.hook);
+  parts.push("");
+  parts.push("CHORUS:");
+  parts.push(t.chorus.join("\n"));
+  t.verses.forEach(function (v, i) {
+    parts.push("");
+    parts.push("VERSE " + (i + 1) + " — Action: " + v.action + " (" + t.name + " with Taffy)");
+    parts.push(v.lines.join("\n"));
+    parts.push("");
+    parts.push("CHORUS:");
+    parts.push(t.chorus.join("\n"));
+  });
+  return parts.join("\n");
+}
+
+function buildTitle(t) {
+  return t.moment + "! " + t.question + " | " + t.name + " Song with Taffy | Nursery Rhymes for Toddlers & Preschoolers";
+}
+
+function buildDescription(t) {
+  return "Sing along with Taffy! \uD83C\uDFB5 \"" + t.hook + "\" " +
+    "This original " + t.name.toLowerCase() + " song is made for toddlers and preschoolers — " +
+    "simple repetitive words, one easy copyable action in every verse, and a chorus made for singing again and again. " +
+    "Perfect for learning through play! Watch Taffy sing, dance and learn with you. " +
+    "Subscribe to TaffyTunes for a new kids' song every day!";
+}
+
+function buildTags(t) {
+  return HASHTAG_BASE + " " + topicTag(t.name);
+}
+
+function generate() {
+  if (!selectedTopic) return;
+  const t = selectedTopic;
+  current.lyrics = buildLyrics(t);
+  current.title = buildTitle(t);
+  current.desc = buildDescription(t);
+  current.tags = buildTags(t);
+
+  document.getElementById("outTopicName").textContent = t.emoji + " " + t.name;
+  document.getElementById("hookText").textContent = t.hook;
+  document.getElementById("lyricsText").textContent = current.lyrics;
+  document.getElementById("titleText").textContent = current.title;
+  document.getElementById("descText").textContent = current.desc;
+  document.getElementById("tagsText").textContent = current.tags;
+  const m = MOODS[t.mood];
+  document.getElementById("musicText").textContent =
+    "Mood: " + m.label + " — " + m.hint +
+    " Use a different copyright-free track for every video, and put the track's credit line in the description.";
+
+  document.getElementById("outputCard").hidden = false;
+  document.getElementById("emptyCard").hidden = true;
+  document.getElementById("outputCard").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+/* ------------------------------------------------------------------ */
+/*  Copy to clipboard (with fallback for older browsers)               */
+/* ------------------------------------------------------------------ */
+function copyText(text, btn) {
+  function done() {
+    const old = btn.textContent;
+    btn.textContent = "✅ Copied!";
+    btn.classList.add("copied");
+    setTimeout(function () { btn.textContent = old; btn.classList.remove("copied"); }, 1800);
+  }
+  function fallback() {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); done(); }
+    catch (e) { btn.textContent = "Copy failed — select the text manually"; }
+    document.body.removeChild(ta);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(fallback);
+  } else {
+    fallback();
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Init                                                               */
+/* ------------------------------------------------------------------ */
+renderTopics();
+document.getElementById("generateBtn").addEventListener("click", generate);
+document.getElementById("randomBtn").addEventListener("click", function () {
+  const t = TOPICS[Math.floor(Math.random() * TOPICS.length)];
+  selectTopic(t.id);
+  generate();
+});
+document.querySelectorAll(".copy-btn").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    copyText(current[btn.dataset.copy] || "", btn);
+  });
+});
+</script>
+</body>
+</html>
